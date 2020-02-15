@@ -32,4 +32,15 @@ main() {
 	// 检查 NaN 。
 	var iMeantToDoThis = 0 / 0;
 	print(iMeantToDoThis.isNaN);
+	/**
+	 * List
+	几乎每种编程语言中最常见的集合可能是 array 或有序的对象集合。
+	*/
+	var list = [1, 2, 3];
+	var list = [1, 2, 3];
+	assert(list.length == 3);
+	assert(list[1] == 2);
+
+	list[1] = 1;
+	assert(list[1] == 1);
 }

@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textColor: Colors.blue,
               onPressed: () {
               //导航到新路由   
+              debugDumpApp();
                 Navigator.pushNamed(context, "new_page");
                 // Navigator.push( context,
                 //   MaterialPageRoute(builder: (context) {

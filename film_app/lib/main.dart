@@ -59,7 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
               textColor: Colors.blue,
               onPressed: () {
               //导航到新路由   
-              debugDumpApp();
                 Navigator.pushNamed(context, "new_page");
                 // Navigator.push( context,
                 //   MaterialPageRoute(builder: (context) {
@@ -67,8 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 //   }));
               },
             ),
-            RouterTestRoute(),
-            RandomWordsWidget(),
+            // RouterTestRoute(),
+            // RandomWordsWidget(),
           ],
         ),
       ),
@@ -89,79 +88,150 @@ class NewRoute extends StatelessWidget {
         title: Text("New route"),
       ),
       body: Center(
-        child: Text("This is new route"),
+        child: CounterWidget(),
       ),
     );
   }
 }
 
-//路由传值
-class TipRoute extends StatelessWidget {
-  TipRoute({
+// //路由传值
+// class TipRoute extends StatelessWidget {
+//   TipRoute({
+//     Key key,
+//     @required this.text,  // 接收一个text参数
+//   }) : super(key: key);
+//   final String text;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("提示"),
+//       ),
+//       body: Padding(
+//         padding: EdgeInsets.all(18),
+//         child: Center(
+//           child: Column(
+//             children: <Widget>[
+//               Text(text),
+//               RaisedButton(
+//                 onPressed: () => Navigator.pop(context, "我是返回值"),
+//                 child: Text("返回"),
+//               )
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class RouterTestRoute extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: RaisedButton(
+//         onPressed: () async {
+//           // 打开`TipRoute`，并等待返回结果
+//           var result = await Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) {
+//                 return TipRoute(
+//                   // 路由参数
+//                   text: "我是提示xxxx",
+//                 );
+//               },
+//             ),
+//           );
+//           //输出`TipRoute`路由返回结果
+//           print("路由返回值: $result");
+//         },
+//         child: Text("打开提示页"),
+//       ),
+//     );
+//   }
+// }
+
+// class RandomWordsWidget extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//    // 生成随机字符串
+//     final wordPair = new WordPair.random();
+//     return Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: new Text(wordPair.toString()),
+//     );
+//   }
+// }
+
+class CounterWidget extends StatefulWidget {
+  const CounterWidget({
     Key key,
-    @required this.text,  // 接收一个text参数
-  }) : super(key: key);
-  final String text;
+    this.initValue: 0
+  });
+
+  final int initValue;
+
+  @override
+  _CounterWidgetState createState() => new _CounterWidgetState();
+}
+
+//state 
+class _CounterWidgetState extends State<CounterWidget> {  
+  int _counter;
+
+  @override
+  void initState() {
+    super.initState();
+    //初始化状态  
+    _counter=widget.initValue;
+    print("initState");
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     return Scaffold(
-      appBar: AppBar(
-        title: Text("提示"),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(18),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Text(text),
-              RaisedButton(
-                onPressed: () => Navigator.pop(context, "我是返回值"),
-                child: Text("返回"),
-              )
-            ],
+      body: Center(
+        child: FlatButton(
+          child: Text('$_counter'),
+          //点击后计数器自增
+          onPressed:()=>setState(()=> ++_counter,
           ),
         ),
       ),
     );
   }
-}
 
-class RouterTestRoute extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: RaisedButton(
-        onPressed: () async {
-          // 打开`TipRoute`，并等待返回结果
-          var result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return TipRoute(
-                  // 路由参数
-                  text: "我是提示xxxx",
-                );
-              },
-            ),
-          );
-          //输出`TipRoute`路由返回结果
-          print("路由返回值: $result");
-        },
-        child: Text("打开提示页"),
-      ),
-    );
+  void didUpdateWidget(CounterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget");
   }
-}
 
-class RandomWordsWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-   // 生成随机字符串
-    final wordPair = new WordPair.random();
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: new Text(wordPair.toString()),
-    );
+  void deactivate() {
+    super.deactivate();
+    print("deactive");
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("dispose");
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    print("reassemble");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("didChangeDependencies");
+  }
+
 }

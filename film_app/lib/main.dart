@@ -87,104 +87,141 @@ class NewRoute extends StatelessWidget {
       appBar: AppBar(
         title: Text("New route"),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[ 
-            // Text("Hello world"*3,
-            //   textAlign: TextAlign.left,
-            // ),
-            // Text("Hello world! I'm Jack. "*8,
-            //   textAlign: TextAlign.center,
-            // ),
-            // Text("Hello world",
-            //   textScaleFactor: 2.5,
-            // ),
-            // Text("Hello world",
-            //   style: TextStyle(
-            //     color: Colors.blue,
-            //     fontSize: 18.0,
-            //     height: 1.2,  
-            //     fontFamily: "Courier",
-            //     background: new Paint()..color=Colors.yellow,
-            //     decoration:TextDecoration.underline,
-            //     decorationStyle: TextDecorationStyle.dashed
-            //   ),
-            // ),
-            // Text.rich(TextSpan(
-            //   children: [
-            //     TextSpan(
-            //       text: "Home: "
-            //     ),
-            //     TextSpan(
-            //       text: "https://flutterchina.club",
-            //       style: TextStyle(
-            //         color: Colors.blue
-            //       ),  
-            //     ),
-            //   ]
-            // )),
-            // DefaultTextStyle(
-            //   //1.设置文本默认样式  
-            //   style: TextStyle(
-            //     color:Colors.red,
-            //     fontSize: 20.0,
-            //   ),
-            //   textAlign: TextAlign.start,
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: <Widget>[
-            //       Text("hello world"),
-            //       Text("I am Jack"),
-            //       Text("I am Jack",
-            //         style: TextStyle(
-            //           inherit: false, //2.不继承默认样式
-            //           color: Colors.grey
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            RaisedButton(
-              child: Text("raise"),
-              onPressed: () {},
-            ),
-            FlatButton(
-              child: Text("flat"),
-              onPressed: () {},
-            ),
-            OutlineButton(
-              child: Text("Outline"),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.thumb_up),
-              onPressed: () {},
-            ),
-            RaisedButton.icon(
-              icon: Icon(Icons.send),
-              label: Text("发送"),
-              onPressed: () {},
-            ),
-            OutlineButton.icon(
-              icon: Icon(Icons.add),
-              label: Text("添加"),
-              onPressed: () {},
-            ),
-            FlatButton.icon(
-              icon: Icon(Icons.info),
-              label: Text("详情"),
-              onPressed: () {},
-            ),
-            RaisedButtongit(
-              color: Colors.blue,
-              highlightColor: Colors.blue[700],
-              colorBrightness: Brightness.dark,
-              splashColor: Colors.grey,
-              child: Text("Submit"),
-              shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-              onPressed: () {},
-            )
-          ]
+      body: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column( 
+            children: <Widget>[ 
+              // Text("Hello world"*3,
+              //   textAlign: TextAlign.left,
+              // ),
+              // Text("Hello world! I'm Jack. "*8,
+              //   textAlign: TextAlign.center,
+              // ),
+              // Text("Hello world",
+              //   textScaleFactor: 2.5,
+              // ),
+              // Text("Hello world",
+              //   style: TextStyle(
+              //     color: Colors.blue,
+              //     fontSize: 18.0,
+              //     height: 1.2,  
+              //     fontFamily: "Courier",
+              //     background: new Paint()..color=Colors.yellow,
+              //     decoration:TextDecoration.underline,
+              //     decorationStyle: TextDecorationStyle.dashed
+              //   ),
+              // ),
+              // Text.rich(TextSpan(
+              //   children: [
+              //     TextSpan(
+              //       text: "Home: "
+              //     ),
+              //     TextSpan(
+              //       text: "https://flutterchina.club",
+              //       style: TextStyle(
+              //         color: Colors.blue
+              //       ),  
+              //     ),
+              //   ]
+              // )),
+              // DefaultTextStyle(
+              //   //1.设置文本默认样式  
+              //   style: TextStyle(
+              //     color:Colors.red,
+              //     fontSize: 20.0,
+              //   ),
+              //   textAlign: TextAlign.start,
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: <Widget>[
+              //       Text("hello world"),
+              //       Text("I am Jack"),
+              //       Text("I am Jack",
+              //         style: TextStyle(
+              //           inherit: false, //2.不继承默认样式
+              //           color: Colors.grey
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // RaisedButton(
+              //   child: Text("raise"),
+              //   onPressed: () {},
+              // ),
+              // FlatButton(
+              //   child: Text("flat"),
+              //   onPressed: () {},
+              // ),
+              // OutlineButton(
+              //   child: Text("Outline"),
+              //   onPressed: () {},
+              // ),
+              // IconButton(
+              //   icon: Icon(Icons.thumb_up),
+              //   onPressed: () {},
+              // ),
+              // RaisedButton.icon(
+              //   icon: Icon(Icons.send),
+              //   label: Text("发送"),
+              //   onPressed: () {},
+              // ),
+              // OutlineButton.icon(
+              //   icon: Icon(Icons.add),
+              //   label: Text("添加"),
+              //   onPressed: () {},
+              // ),
+              // FlatButton.icon(
+              //   icon: Icon(Icons.info),
+              //   label: Text("详情"),
+              //   onPressed: () {},
+              // ),
+              // RaisedButtongit(
+              //   color: Colors.blue,
+              //   highlightColor: Colors.blue[700],
+              //   colorBrightness: Brightness.dark,
+              //   splashColor: Colors.grey,
+              //   child: Text("Submit"),
+              //   shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              //   onPressed: () {},
+              // )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.accessible,color: Colors.green,),
+                  Icon(Icons.error,color: Colors.green,),
+                  Icon(Icons.fingerprint,color: Colors.green,),
+                ],
+              ),
+              Image(
+                image: AssetImage("images/avatar.jpg"),
+                width: 100.0
+              ),
+              Image.asset("images/avatar.jpg",
+                width: 150.0
+              ),
+              Image(
+                image: NetworkImage("https://www.baidu.com/img/bd_logo1.png"),
+                width: 100.0,
+              ),
+              Image.network(
+                "https://www.baidu.com/img/bd_logo1.png",
+                width: 150.0,
+              ),
+              Image(
+                image: AssetImage("images/avatar.jpg"),
+                width: 100.0,
+                color: Colors.blue,
+                colorBlendMode: BlendMode.difference,
+              ),
+              Image(
+                image: AssetImage("images/avatar.jpg"),
+                width: 100.0,
+                height: 200.0,
+                repeat: ImageRepeat.repeatY ,
+              )
+            ]
+          )
         )
       ),
     );

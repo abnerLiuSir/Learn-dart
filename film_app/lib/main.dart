@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
 void main() => runApp(new MyApp());
 
@@ -14,6 +13,7 @@ class MyApp extends StatelessWidget {
       ),
       routes:{
         "new_page":(context) => NewRoute(),
+        "switchAndCheckBox_page": (context) => FormTestRoute(),
          "/":(context) => MyHomePage(title: 'Flutter Demo Home Page'), //注册首页路由
       } ,
     );
@@ -66,6 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 //   }));
               },
             ),
+            OutlineButton.icon(
+              label: Text("选择框"),
+              icon: Icon(Icons.add),
+              onPressed: (){
+                Navigator.pushNamed(context, "switchAndCheckBox_page");
+              },
+            )
             // RouterTestRoute(),
             // RandomWordsWidget(),
           ],
@@ -185,44 +192,202 @@ class NewRoute extends StatelessWidget {
               //   shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               //   onPressed: () {},
               // )
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.accessible,color: Colors.green,),
-                  Icon(Icons.error,color: Colors.green,),
-                  Icon(Icons.fingerprint,color: Colors.green,),
-                ],
-              ),
-              Image(
-                image: AssetImage("images/avatar.jpg"),
-                width: 100.0
-              ),
-              Image.asset("images/avatar.jpg",
-                width: 150.0
-              ),
-              Image(
-                image: NetworkImage("https://www.baidu.com/img/bd_logo1.png"),
-                width: 100.0,
-              ),
-              Image.network(
-                "https://www.baidu.com/img/bd_logo1.png",
-                width: 150.0,
-              ),
-              Image(
-                image: AssetImage("images/avatar.jpg"),
-                width: 100.0,
-                color: Colors.blue,
-                colorBlendMode: BlendMode.difference,
-              ),
-              Image(
-                image: AssetImage("images/avatar.jpg"),
-                width: 100.0,
-                height: 200.0,
-                repeat: ImageRepeat.repeatY ,
-              )
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     Icon(Icons.accessible,color: Colors.green,),
+              //     Icon(Icons.error,color: Colors.green,),
+              //     Icon(Icons.fingerprint,color: Colors.green,),
+              //   ],
+              // ),
+              // Image(
+              //   image: AssetImage("images/avatar.jpg"),
+              //   width: 100.0
+              // ),
+              // Image.asset("images/avatar.jpg",
+              //   width: 150.0
+              // ),
+              // Image(
+              //   image: NetworkImage("https://www.baidu.com/img/bd_logo1.png"),
+              //   width: 100.0,
+              // ),
+              // Image.network(
+              //   "https://www.baidu.com/img/bd_logo1.png",
+              //   width: 150.0,
+              // ),
+              // Image(
+              //   image: AssetImage("images/avatar.jpg"),
+              //   width: 100.0,
+              //   color: Colors.blue,
+              //   colorBlendMode: BlendMode.difference,
+              // ),
+              // Image(
+              //   image: AssetImage("images/avatar.jpg"),
+              //   width: 100.0,
+              //   height: 200.0,
+              //   repeat: ImageRepeat.repeatY ,
+              // )
             ]
           )
         )
+      ),
+    );
+  }
+}
+
+class SwitchAndCheckBoxTestRoute extends StatefulWidget {
+  @override
+  _SwitchAndCheckBoxTestRouteState createState() => new _SwitchAndCheckBoxTestRouteState();
+}
+
+class _SwitchAndCheckBoxTestRouteState extends State<SwitchAndCheckBoxTestRoute> {
+  TextEditingController _unameController = TextEditingController();
+  TextEditingController _upasswordController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title : Text("switch and checkbox"),
+      ),
+      body: Container (
+        child: Column(
+          children: <Widget>[
+            Theme(
+              data: Theme.of(context).copyWith(
+                  hintColor: Colors.grey[200], //定义下划线颜色
+                  inputDecorationTheme: InputDecorationTheme(
+                      labelStyle: TextStyle(color: Colors.red),//定义label字体样式
+                      hintStyle: TextStyle(color: Colors.yellow, fontSize: 14.0)//定义提示文本样式
+                  )
+              ),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(
+                        labelText: "用户名",
+                        hintText: "用户名或邮箱",
+                        prefixIcon: Icon(Icons.person)
+                    ),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock),
+                        labelText: "密码",
+                        hintText: "您的登录密码",
+
+                    ),
+                    obscureText: true,
+                  )
+                ],
+              )
+            ),
+            Container(
+              child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                    labelText: "Email",
+                    hintText: "电子邮件地址",
+                    prefixIcon: Icon(Icons.email),
+                    border: InputBorder.none //隐藏下划线
+                )
+              ),
+              decoration: BoxDecoration(
+                  // 下滑线浅灰色，宽度1像素
+                  border: Border(bottom: BorderSide(color: Colors.grey[200], width: 1.0))
+              ),
+            )
+          ],
+        )
+      ),
+    );
+  }
+}
+class FormTestRoute extends StatefulWidget {
+  @override
+  _FormTestRouteState createState() => new _FormTestRouteState();
+}
+
+class _FormTestRouteState extends State<FormTestRoute> {
+  TextEditingController _unameController = new TextEditingController();
+  TextEditingController _pwdController = new TextEditingController();
+  GlobalKey _formKey= new GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title:Text("Form Test"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+        child: Form(
+          key: _formKey, //设置globalKey，用于后面获取FormState
+          autovalidate: true, //开启自动校验
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                  autofocus: true,
+                  controller: _unameController,
+                  decoration: InputDecoration(
+                      labelText: "用户名",
+                      hintText: "用户名或邮箱",
+                      icon: Icon(Icons.person)
+                  ),
+                  // 校验用户名
+                  validator: (v) {
+                    return v
+                        .trim()
+                        .length > 0 ? null : "用户名不能为空";
+                  }
+
+              ),
+              TextFormField(
+                  controller: _pwdController,
+                  decoration: InputDecoration(
+                      labelText: "密码",
+                      hintText: "您的登录密码",
+                      icon: Icon(Icons.lock)
+                  ),
+                  obscureText: true,
+                  //校验密码
+                  validator: (v) {
+                    return v
+                        .trim()
+                        .length > 5 ? null : "密码不能少于6位";
+                  }
+              ),
+              // 登录按钮
+              Padding(
+                padding: const EdgeInsets.only(top: 28.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text("登录"),
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          //在这里不能通过此方式获取FormState，context不对
+                          //print(Form.of(context));
+
+                          // 通过_formKey.currentState 获取FormState后，
+                          // 调用validate()方法校验用户名密码是否合法，校验
+                          // 通过后再提交数据。 
+                          if((_formKey.currentState as FormState).validate()){
+                            //验证通过提交数据
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

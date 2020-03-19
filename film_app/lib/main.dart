@@ -88,150 +88,193 @@ class NewRoute extends StatelessWidget {
         title: Text("New route"),
       ),
       body: Center(
-        child: CounterWidget(),
+        child: ParentWidgetC(),
       ),
     );
   }
 }
 
-// //路由传值
-// class TipRoute extends StatelessWidget {
-//   TipRoute({
-//     Key key,
-//     @required this.text,  // 接收一个text参数
-//   }) : super(key: key);
-//   final String text;
+// class TapboxA extends StatefulWidget {
+//   TapboxA({Key key}) : super(key: key);
+
+//   @override
+//   _TapboxAState createState() => new _TapboxAState();
+// }
+
+// class _TapboxAState extends State<TapboxA> {
+//   bool _active = false;
+
+//   void _handleTap() {
+//     setState(() {
+//       _active = !_active;
+//     });
+//   }
+
+//   Widget build(BuildContext context) {
+//     return new GestureDetector(
+//       onTap: _handleTap,
+//       child: new Container(
+//         child: new Center(
+//           child: new Text(
+//             _active ? 'Active' : 'Inactive',
+//             style: new TextStyle(fontSize: 32.0, color: Colors.white),
+//           ),
+//         ),
+//         width: 200.0,
+//         height: 200.0,
+//         decoration: new BoxDecoration(
+//           color: _active ? Colors.lightGreen[700] : Colors.grey[600],
+//         ),
+//       ),
+//     );
+//   }
+// }
+// class ParentWidget extends StatefulWidget {
+//   @override
+//   _ParentWidgetState createState() => new _ParentWidgetState();
+// }
+
+// class _ParentWidgetState extends State<ParentWidget> {
+//   bool _active = false;
+
+//   void _handleTapboxChanged(bool newValue) {
+//     setState(() {
+//       _active = newValue;
+//     });
+//   }
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("提示"),
+//     return new Container(
+//       child: new TapboxB(
+//         active: _active,
+//         onChanged: _handleTapboxChanged,
 //       ),
-//       body: Padding(
-//         padding: EdgeInsets.all(18),
-//         child: Center(
-//           child: Column(
-//             children: <Widget>[
-//               Text(text),
-//               RaisedButton(
-//                 onPressed: () => Navigator.pop(context, "我是返回值"),
-//                 child: Text("返回"),
-//               )
-//             ],
+//     );
+//   }
+// }
+
+// //------------------------- TapboxB ----------------------------------
+
+// class TapboxB extends StatelessWidget {
+//   TapboxB({Key key, this.active: false, @required this.onChanged})
+//       : super(key: key);
+
+//   final bool active;
+//   final ValueChanged<bool> onChanged;
+
+//   void _handleTap() {
+//     onChanged(!active);
+//   }
+
+//   Widget build(BuildContext context) {
+//     return new GestureDetector(
+//       onTap: _handleTap,
+//       child: new Container(
+//         child: new Center(
+//           child: new Text(
+//             active ? 'Active' : 'Inactive',
+//             style: new TextStyle(fontSize: 32.0, color: Colors.white),
 //           ),
+//         ),
+//         width: 200.0,
+//         height: 200.0,
+//         decoration: new BoxDecoration(
+//           color: active ? Colors.lightGreen[700] : Colors.grey[600],
 //         ),
 //       ),
 //     );
 //   }
 // }
 
-// class RouterTestRoute extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: RaisedButton(
-//         onPressed: () async {
-//           // 打开`TipRoute`，并等待返回结果
-//           var result = await Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//               builder: (context) {
-//                 return TipRoute(
-//                   // 路由参数
-//                   text: "我是提示xxxx",
-//                 );
-//               },
-//             ),
-//           );
-//           //输出`TipRoute`路由返回结果
-//           print("路由返回值: $result");
-//         },
-//         child: Text("打开提示页"),
-//       ),
-//     );
-//   }
-// }
-
-// class RandomWordsWidget extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//    // 生成随机字符串
-//     final wordPair = new WordPair.random();
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: new Text(wordPair.toString()),
-//     );
-//   }
-// }
-
-class CounterWidget extends StatefulWidget {
-  const CounterWidget({
-    Key key,
-    this.initValue: 0
-  });
-
-  final int initValue;
-
+class ParentWidgetC extends StatefulWidget {
   @override
-  _CounterWidgetState createState() => new _CounterWidgetState();
+  _ParentWidgetCState createState() => new _ParentWidgetCState();
 }
 
-//state 
-class _CounterWidgetState extends State<CounterWidget> {  
-  int _counter;
+class _ParentWidgetCState extends State<ParentWidgetC> {
+  bool _active = false;
 
-  @override
-  void initState() {
-    super.initState();
-    //初始化状态  
-    _counter=widget.initValue;
-    print("initState");
+  void _handleTapboxChanged(bool newValue) {
+    setState(() {
+      _active = newValue;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build");
-    return Scaffold(
-      body: Center(
-        child: FlatButton(
-          child: Text('$_counter'),
-          //点击后计数器自增
-          onPressed:()=>setState(()=> ++_counter,
-          ),
+    return new Container(
+      child: new TapboxC(
+        active: _active,
+        onChanged: _handleTapboxChanged,
+      ),
+    );
+  }
+}
+
+//----------------------------- TapboxC ------------------------------
+
+class TapboxC extends StatefulWidget {
+  TapboxC({Key key, this.active: false, @required this.onChanged})
+      : super(key: key);
+
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  _TapboxCState createState() => new _TapboxCState();
+}
+
+class _TapboxCState extends State<TapboxC> {
+  bool _highlight = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _highlight = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  void _handleTap() {
+    widget.onChanged(!widget.active);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 在按下时添加绿色边框，当抬起时，取消高亮  
+    return new GestureDetector(
+      onTapDown: _handleTapDown, // 处理按下事件
+      onTapUp: _handleTapUp, // 处理抬起事件
+      onTap: _handleTap,
+      onTapCancel: _handleTapCancel,
+      child: new Container(
+        child: new Center(
+          child: new Text(widget.active ? 'Active' : 'Inactive',
+              style: new TextStyle(fontSize: 32.0, color: Colors.white)),
+        ),
+        width: 200.0,
+        height: 200.0,
+        decoration: new BoxDecoration(
+          color: widget.active ? Colors.lightGreen[700] : Colors.grey[600],
+          border: _highlight
+              ? new Border.all(
+                  color: Colors.teal[700],
+                  width: 10.0,
+                )
+              : null,
         ),
       ),
     );
   }
-
-  @override
-  void didUpdateWidget(CounterWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    print("didUpdateWidget");
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    print("deactive");
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    print("dispose");
-  }
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    print("reassemble");
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    print("didChangeDependencies");
-  }
-
 }

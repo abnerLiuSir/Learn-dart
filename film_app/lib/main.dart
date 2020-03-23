@@ -284,36 +284,36 @@ class _ProgressRouteState extends State<ProgressRoute>
 }
 
 class LayoutPageRoute extends StatelessWidget {
+
+  Widget redBox=DecoratedBox(
+    decoration: BoxDecoration(color: Colors.red),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("布局"),
-      ),
-      body: Padding(
-              //上下左右各添加16像素补白
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                //显式指定对齐方式为左对齐，排除对齐干扰
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    //左边添加8像素补白
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text("Hello world"),
-                  ),
-                  Padding(
-                    //上下各添加8像素补白
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text("I am Jack"),
-                  ),
-                  Padding(
-                    // 分别指定四个方向的补白
-                    padding: const EdgeInsets.fromLTRB(20.0,.0,20.0,20.0),
-                    child: Text("Your friend"),
-                  )
-                ],
+        actions: <Widget>[
+          UnconstrainedBox(
+            child: SizedBox(
+              width: 20, 
+              height: 20,
+              child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  valueColor: AlwaysStoppedAnimation(Colors.white70),
               ),
+            ),
+          )
+        ],
+      ),
+      body: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 60.0, minHeight: 100.0),  //父
+        child: UnconstrainedBox( //“去除”父级限制
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: 90.0, minHeight: 20.0),//子
+            child: redBox,
+          ),
+        )
       )
     );
   }

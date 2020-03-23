@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 void main() => runApp(new MyApp());
 
@@ -293,27 +294,19 @@ class LayoutPageRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("布局"),
-        actions: <Widget>[
-          UnconstrainedBox(
-            child: SizedBox(
-              width: 20, 
-              height: 20,
-              child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation(Colors.white70),
-              ),
-            ),
-          )
-        ],
       ),
-      body: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 60.0, minHeight: 100.0),  //父
-        child: UnconstrainedBox( //“去除”父级限制
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 90.0, minHeight: 20.0),//子
-            child: redBox,
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          DecoratedBox(
+            decoration:BoxDecoration(color: Colors.red),
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: Text("Hello world")
+            )
           ),
-        )
+          Text("你好", style: TextStyle(color: Colors.green, fontSize: 18.0),)
+        ],
       )
     );
   }

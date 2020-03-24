@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
         "switchAndCheckBox_page": (context) => FormTestRoute(),
         "/":(context) => MyHomePage(title: 'Flutter Demo Home Page'), //注册首页路由
         "layout_page": (context) => TabBarTest(),
-        "clip_page": (context) => ClipTestRoute()
+        "clip_page": (context) => ClipTestRoute(),
+        "scroll_page": (context) => ScrollRoutePage()
       } ,
     );
   }
@@ -84,7 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
               }, 
               icon: Icon(Icons.add_a_photo), 
               label: Text("裁剪")
-            )
+            ),
+            FlatButton.icon(
+              onPressed: (){
+                Navigator.pushNamed(context, "scroll_page");
+              }, 
+              icon: Icon(Icons.add_box), 
+              label: Text("滚动")
+            ),
             // RouterTestRoute(),
             // RandomWordsWidget(),
           ],
@@ -473,4 +481,30 @@ class MyClipper extends CustomClipper<Rect> {
 
   @override
   bool shouldReclip(CustomClipper<Rect> oldClipper) => false;
+}
+
+class ScrollRoutePage extends StatelessWidget {
+  String str = "QWERTYUIOPASDFGHJKLZXCVBNM";
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("滚动条")
+      ),
+      body: Scrollbar( // 显示进度条
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Center(
+            child: Column( 
+              //动态创建一个List<Widget>  
+              children: str.split("") 
+                  //每一个字母都用一个Text显示,字体为原来的两倍
+                  .map((c) => Text(c, textScaleFactor: 2.0,)) 
+                  .toList(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

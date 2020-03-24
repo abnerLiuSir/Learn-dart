@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
         "progress_page": (context) => ProgressIndicator(),
         "switchAndCheckBox_page": (context) => FormTestRoute(),
         "/":(context) => MyHomePage(title: 'Flutter Demo Home Page'), //注册首页路由
-        "layout_page": (context) => LayoutPageRoute(),
+        "layout_page": (context) => TabBarTest(),
+        "clip_page": (context) => ClipTestRoute()
       } ,
     );
   }
@@ -76,6 +77,13 @@ class _MyHomePageState extends State<MyHomePage> {
               }, 
               icon: Icon(Icons.add), 
               label: Text("布局")
+            ),
+            FlatButton.icon(
+              onPressed: (){
+                Navigator.pushNamed(context, "clip_page");
+              }, 
+              icon: Icon(Icons.add_a_photo), 
+              label: Text("裁剪")
             )
             // RouterTestRoute(),
             // RandomWordsWidget(),
@@ -284,30 +292,185 @@ class _ProgressRouteState extends State<ProgressRoute>
   }
 }
 
-class LayoutPageRoute extends StatelessWidget {
 
-  Widget redBox=DecoratedBox(
-    decoration: BoxDecoration(color: Colors.red),
-  );
+
+class TabBarTest extends StatefulWidget {
+  @override
+  _TabBarTestState createState() => _TabBarTestState();
+}
+
+class _TabBarTestState extends State <TabBarTest>  with SingleTickerProviderStateMixin {
+  TabController _tabController; //需要定义一个Controller
+  List tabs = ["新闻", "历史", "图片","世通","世通","世通","世通","世通"];
+
+  @override
+  void initState() {
+    super.initState();
+    // 创建Controller  
+    _tabController = TabController(length: tabs.length, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("布局"),
+        bottom: TabBar(   //生成Tab菜单
+          isScrollable: true,
+          controller: _tabController,
+          tabs: tabs.map((e) => Tab(text: e)).toList()
+        ),
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          DecoratedBox(
-            decoration:BoxDecoration(color: Colors.red),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Text("Hello world")
-            )
-          ),
-          Text("你好", style: TextStyle(color: Colors.green, fontSize: 18.0),)
-        ],
-      )
+      body: TabBarView(
+        controller: _tabController,
+        children: tabs.map((e){
+            return Container(
+              alignment: Alignment.center,
+              child: Text(e, textScaleFactor: 5),
+            );
+          }
+        ).toList()
+      ),
+      drawer: MyDrawer(),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        shape: CircularNotchedRectangle(), // 底部导航栏打一个圆形的洞
+        child: Row(
+          children: [
+            IconButton(icon: Icon(Icons.home)),
+            SizedBox(), //中间位置空出
+            IconButton(icon: Icon(Icons.business)),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceAround, //均分底部导航栏横向空间
+        ),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton( //悬浮按钮
+          child: Icon(Icons.linked_camera),
+          onPressed:(){}
+      ),
     );
   }
+}
+
+class MyDrawer extends StatelessWidget {
+  const MyDrawer({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: MediaQuery.removePadding(
+        context: context,
+        //移除抽屉菜单顶部默认留白
+        removeTop: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 38.0),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ClipOval(
+                      child: Image.asset(
+                        "images/avatar.jpg",
+                        width: 80,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "abner",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.add),
+                    title: const Text('Add account'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Manage accounts'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ClipTestRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // 头像  
+    Widget avatar = Image.asset("images/avatar.jpg", width: 60.0);
+    return Scaffold(
+      appBar: AppBar(
+      
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            avatar, //不剪裁
+            ClipOval(child: avatar), //剪裁为圆形
+            ClipRRect( //剪裁为圆角矩形
+              borderRadius: BorderRadius.circular(5.0),
+              child: avatar,
+            ), 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.topLeft,
+                  widthFactor: .5,//宽度设为原来宽度一半，另一半会溢出
+                  child: avatar,
+                ),
+                Text("你好世界", style: TextStyle(color: Colors.green),)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ClipRect(//将溢出部分剪裁
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    widthFactor: .5,//宽度设为原来宽度一半
+                    child: avatar,
+                  ),
+                ),
+                Text("你好世界",style: TextStyle(color: Colors.green))
+              ],
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.red
+              ),
+              child: ClipRect(
+                  clipper: MyClipper(), //使用自定义的clipper
+                  child: avatar
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyClipper extends CustomClipper<Rect> {
+  @override
+  Rect getClip(Size size) => Rect.fromLTWH(10.0, 15.0, 40.0, 30.0);
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) => false;
 }

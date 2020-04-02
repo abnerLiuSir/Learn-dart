@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       initialRoute:"/", //名为"/"的路由作为应用的home(首页)
       theme: new ThemeData(
@@ -19,7 +20,10 @@ class MyApp extends StatelessWidget {
         "/":(context) => MyHomePage(title: 'Flutter Demo Home Page'), //注册首页路由
         "layout_page": (context) => TabBarTest(),
         "clip_page": (context) => ClipTestRoute(),
-        "scroll_page": (context) => ScrollRoutePage()
+        "scroll_page": (context) => ScrollRoutePage(),
+        "theme_page": (context) => ThemeTestRoute(),
+        "inherited_page": (context) => TestInheritedWidget(),
+        "provide_page": (context) => ProviderRoute()
       } ,
     );
   }
@@ -94,10 +98,29 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.add_box), 
               label: Text("滚动")
             ),
-            WillPopScopeTestRoute(),
-            _TestWidget()
             // RouterTestRoute(),
             // RandomWordsWidget(),
+            FlatButton.icon(
+              onPressed: (){
+                Navigator.pushNamed(context, "theme_page");
+              },
+              icon: Icon(Icons.home),
+              label: Text("主题")
+            ),
+            FlatButton.icon(
+              onPressed: (){
+                Navigator.pushNamed(context, "inherited_page");
+              }, 
+              icon: Icon(Icons.data_usage),
+              label: Text("数据共享")
+            ),
+            FlatButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, "provide_page");
+              }, 
+              icon: Icon(Icons.flag), 
+              label: Text("状态管理")
+            )
           ],
         ),
       ),
@@ -546,37 +569,79 @@ class _ScrollNotificationTestRouteState
   }
 }
 
-
-class WillPopScopeTestRoute extends StatefulWidget {
+class ThemeTestRoute extends StatefulWidget {
   @override
-  WillPopScopeTestRouteState createState() {
-    return new WillPopScopeTestRouteState();
-  }
+  _ThemeTestRouteState createState() => new _ThemeTestRouteState();
 }
 
-class WillPopScopeTestRouteState extends State<WillPopScopeTestRoute> {
-  DateTime _lastPressedAt; //上次点击时间
-
+class _ThemeTestRouteState extends State<ThemeTestRoute> {
+  Color _themeColor = Colors.teal; //当前路由主题色
+  static const c = Color(0x0BF4D9);
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
-        onWillPop: () async {
-          if (_lastPressedAt == null ||
-              DateTime.now().difference(_lastPressedAt) > Duration(seconds: 1)) {
-            //两次点击间隔超过1秒则重新计时
-            _lastPressedAt = DateTime.now();
-            return false;
-          }
-          return true;
-        },
-        child: Container(
-          alignment: Alignment.center,
-          child: Text("1秒内连续按两次返回键退出"),
-        )
+    ThemeData themeData = Theme.of(context);
+    return Theme(
+      data: ThemeData(
+          primarySwatch: _themeColor, //用于导航栏、FloatingActionButton的背景色等
+          iconTheme: IconThemeData(color: _themeColor) //用于Icon颜色
+      ),
+      child: Scaffold(
+        appBar: AppBar(title: Text("主题测试")),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            //第一行Icon使用主题中的iconTheme
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.favorite),
+                  Icon(Icons.airport_shuttle),
+                  Text("  颜色跟随主题")
+                ]
+            ),
+            //为第二行Icon自定义颜色（固定为黑色)
+            Theme(
+              // data: themeData.copyWith(
+              //   iconTheme: themeData.iconTheme.copyWith(
+              //       color: Colors.black
+              //   ),
+              // ),
+              data: ThemeData(
+                primarySwatch: Colors.lightBlue,
+                iconTheme: IconThemeData(color: Colors.lightBlue)
+              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.favorite),
+                    Icon(Icons.airport_shuttle),
+                    Text("  颜色固定黑色")
+                  ]
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () =>  //切换主题
+                setState(() =>
+                _themeColor =
+                _themeColor == Colors.teal ? Colors.blue : Colors.teal
+                ),
+            child: Icon(Icons.palette)
+        ),
+      ),
     );
   }
 }
 
+class TestInheritedWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: InheritedWidgetTestRoute(),
+    );
+  }
+}
 
 class ShareDataWidget extends InheritedWidget {
   ShareDataWidget({
@@ -599,29 +664,6 @@ class ShareDataWidget extends InheritedWidget {
     return old.data != data;
   }
 }
-class _TestWidget extends StatefulWidget {
-  @override
-  __TestWidgetState createState() => new __TestWidgetState();
-}
-
-class __TestWidgetState extends State<_TestWidget> {
-  @override
-  Widget build(BuildContext context) {
-    //使用InheritedWidget中的共享数据
-    return Text(ShareDataWidget
-        .of(context)
-        .data
-        .toString());
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    //父或祖先widget中的InheritedWidget改变(updateShouldNotify返回true)时会被调用。
-    //如果build中没有依赖InheritedWidget，则此回调不会被调用。
-    print("Dependencies change");
-  }
-}
 
 class InheritedWidgetTestRoute extends StatefulWidget {
   @override
@@ -641,7 +683,9 @@ class _InheritedWidgetTestRouteState extends State<InheritedWidgetTestRoute> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
-              child: _TestWidget(),//子widget中依赖ShareDataWidget
+              child: Container(
+                child: _TestWidget(),
+              ),//子widget中依赖ShareDataWidget
             ),
             RaisedButton(
               child: Text("Increment"),
@@ -651,6 +695,190 @@ class _InheritedWidgetTestRouteState extends State<InheritedWidgetTestRoute> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TestWidget extends StatefulWidget {
+  @override
+  __TestWidgetState createState() => new __TestWidgetState();
+}
+
+class __TestWidgetState extends State<_TestWidget> {
+  @override
+  Widget build(BuildContext context) {
+    //使用InheritedWidget中的共享数据
+    // return Text(ShareDataWidget
+    //     .of(context)
+    //     .data
+    //     .toString());
+    return Text("text");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    //父或祖先widget中的InheritedWidget改变(updateShouldNotify返回true)时会被调用。
+    //如果build中没有依赖InheritedWidget，则此回调不会被调用。
+    print("Dependencies change");
+  }
+}
+
+class Item {
+  Item(this.price, this.count);
+  double price; //商品单价
+  int count; // 商品份数
+  //... 省略其它属性
+}
+
+class CartModel extends ChangeNotifier {
+  // 用于保存购物车中商品列表
+  final List<Item> _items = [];
+
+  // 禁止改变购物车里的商品信息
+  // UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
+
+  // 购物车中商品的总价
+  double get totalPrice =>
+      _items.fold(0, (value, item) => value + item.count * item.price);
+
+  // 将 [item] 添加到购物车。这是唯一一种能从外部改变购物车的方法。
+  void add(Item item) {
+    _items.add(item);
+    // 通知监听器（订阅者），重新构建InheritedProvider， 更新状态。
+    notifyListeners();
+  }
+}
+
+class ProviderRoute extends StatefulWidget {
+  @override
+  _ProviderRouteState createState() => _ProviderRouteState();
+}
+
+class _ProviderRouteState extends State<ProviderRoute> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("状态管理"),
+      ),
+      body: Center(
+        child: ChangeNotifierProvider<CartModel>(
+          data: CartModel(),
+          child: Builder(builder: (context) {
+            return Column(
+              children: <Widget>[
+                Builder(builder: (context){
+                  var cart=ChangeNotifierProvider.of<CartModel>(context);
+                  return Text("总价: ${cart.totalPrice}");
+                }),
+                Builder(builder: (context){
+                  print("RaisedButton build"); //在后面优化部分会用到
+                  return RaisedButton(
+                    child: Text("添加商品"),
+                    onPressed: () {
+                      //给购物车中添加商品，添加后总价会更新
+                      ChangeNotifierProvider.of<CartModel>(context).add(Item(20.0, 1));
+                    },
+                  );
+                }),
+              ],
+            );
+          }),
+        ),
+      ),
+    );   
+  }
+}
+
+class InheritedProvider<T> extends InheritedWidget {
+  InheritedProvider({@required this.data, Widget child}) : super(child: child);
+
+  //共享状态使用泛型
+  final T data;
+
+  @override
+  bool updateShouldNotify(InheritedProvider<T> old) {
+    //在此简单返回true，则每次更新都会调用依赖其的子孙节点的`didChangeDependencies`。
+    return true;
+  }
+}
+
+class ChangeNotifier implements Listenable {
+
+  @override
+  void addListener(VoidCallback listener) {
+     //添加监听器
+  }
+  @override
+  void removeListener(VoidCallback listener) {
+    //移除监听器
+  }
+
+  void notifyListeners() {
+    //通知所有监听器，触发监听器回调   
+  }
+
+}
+
+Type _typeOf<T>() => T;
+
+class ChangeNotifierProvider<T extends ChangeNotifier> extends StatefulWidget {
+  ChangeNotifierProvider({
+    Key key,
+    this.data,
+    this.child,
+  });
+
+  final Widget child;
+  final T data;
+
+  //定义一个便捷方法，方便子树中的widget获取共享数据
+  static T of<T>(BuildContext context) {
+    final type = _typeOf<InheritedProvider<T>>();
+    final provider =  context.inheritFromWidgetOfExactType(type) as InheritedProvider<T>;
+    return provider.data;
+  }
+
+  @override
+  _ChangeNotifierProviderState<T> createState() => _ChangeNotifierProviderState<T>();
+}
+
+class _ChangeNotifierProviderState<T extends ChangeNotifier> extends State<ChangeNotifierProvider<T>> {
+  void update() {
+    //如果数据发生变化（model类调用了notifyListeners），重新构建InheritedProvider
+    setState(() => {});
+  }
+
+  @override
+  void didUpdateWidget(ChangeNotifierProvider<T> oldWidget) {
+    //当Provider更新时，如果新旧数据不"=="，则解绑旧数据监听，同时添加新数据监听
+    if (widget.data != oldWidget.data) {
+      oldWidget.data.removeListener(update);
+      widget.data.addListener(update);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    // 给model添加监听器
+    widget.data.addListener(update);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // 移除model的监听器
+    widget.data.removeListener(update);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InheritedProvider<T>(
+      data: widget.data,
+      child: widget.child,
     );
   }
 }
